@@ -2,6 +2,7 @@ package com.jungle.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jungle.blog.dao.dos.Archives;
 import com.jungle.blog.dao.mapper.ArticleMapper;
 import com.jungle.blog.dao.pojo.Article;
 import com.jungle.blog.service.ArticleService;
@@ -57,6 +58,39 @@ public class ArticleServiceImpl implements ArticleService {
         return Result.success(articleVoList);
     }
 
+    @Override
+    public Result hotArticle(int limit) {
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.orderByDesc(Article::getViewCounts);
+        queryWrapper.select(Article::getId, Article::getTitle);
+        // limit后有空格
+        queryWrapper.last("limit " + limit);
+        // select id, title from ms_article order by view_counts desc limit 5
+        List<Article> articles = articleMapper.selectList(queryWrapper);
+
+        return Result.success(convertList(articles, false, false));
+    }
+
+    @Override
+    public Result newArticles(int limit) {
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.orderByDesc(Article::getCreateDate);
+        queryWrapper.select(Article::getId, Article::getTitle);
+        // limit后有空格
+        queryWrapper.last("limit " + limit);
+        // select id, title from ms_article order by create_date desc limit 5
+        List<Article> articles = articleMapper.selectList(queryWrapper);
+
+        return Result.success(convertList(articles, false, false));
+    }
+
+    @Override
+    public Result listArchives() {
+        List<Archives> archivesList= articleMapper.listArchives();
+
+        return Result.success(archivesList);
+    }
+
     private List<ArticleVo> convertList(List<Article> records, boolean isTag, boolean isAuthor) {
         List<ArticleVo> articleVoList = new ArrayList<>();
         for (Article record : records) {
@@ -84,4 +118,5 @@ public class ArticleServiceImpl implements ArticleService {
 
         return articleVo;
     }
+
 }

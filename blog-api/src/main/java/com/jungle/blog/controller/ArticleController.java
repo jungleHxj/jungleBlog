@@ -18,7 +18,7 @@ public class ArticleController {
     private ArticleService articleService;
 
     /**
-     * 首页文章列表
+     * 首页 文章列表
      * @param pageParams
      * @return
      */
@@ -27,5 +27,34 @@ public class ArticleController {
 
 
         return articleService.listArticle(pageParams);
+    }
+
+    /**
+     * 首页 最热文章
+     * @return
+     */
+    @PostMapping("hot")
+    public Result hotArticle(){
+        int limit = 5;
+        return articleService.hotArticle(limit);
+    }
+
+    /**
+     * 首页 最新文章
+     * @return
+     */
+    @PostMapping("new")
+    public Result newArticles(){
+        int limit = 5;
+        return articleService.newArticles(limit);
+    }
+
+    /**
+     * 首页 文章归档
+     * @return
+     */
+    @PostMapping("listArchives")
+    public Result listArchives(){
+        return articleService.listArchives();
     }
 }
