@@ -5,7 +5,8 @@ import lombok.Data;
 @Data
 public class Article {
 
-    // 暂时不清楚这两个属性的含义
+    // Article_TOP     文章置顶
+    // Article_Common  普通文章
     public static final int Article_TOP = 1;
     public static final int Article_Common = 0;
 
@@ -14,7 +15,7 @@ public class Article {
     /**
      * 评论数量
      */
-    private int commentCounts;
+    private Integer commentCounts;
 
     /**
      * 创建时间
@@ -34,12 +35,12 @@ public class Article {
     /**
      * 浏览数量
      */
-    private int viewCounts;
+    private Integer viewCounts;
 
     /**
      * 是否置顶
      */
-    private int weight;
+    private Integer weight;
 
     /**
      * 作者id
@@ -54,7 +55,7 @@ public class Article {
     /**
      * 类别id
      */
-    private int category_id;
+    private Long categoryId;
 
 
 }

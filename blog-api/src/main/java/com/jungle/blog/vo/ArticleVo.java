@@ -23,17 +23,17 @@ public class ArticleVo {
     /**
      *评论数量
      */
-    private int commentCounts;
+    private Integer commentCounts;
 
     /**
      * 浏览数量
      */
-    private  int viewCounts;
+    private  Integer viewCounts;
 
     /**
      * 是否置顶
      */
-    private int weight;
+    private Integer weight;
 
     /**
      * 创建时间
@@ -45,11 +45,11 @@ public class ArticleVo {
      */
     private String author;
 
-    //private ArticleBodyVo body;
+    private ArticleBodyVo body;
 
     private List<TagVo> tags;
 
-    //private List<CategoryVo> categorys;
+    private CategoryVo category;
 
 
     /**
@@ -65,5 +65,5 @@ public class ArticleVo {
     /**
      * 类别id
      */
-    private int category_id;
+    private Integer categoryId;
 }
