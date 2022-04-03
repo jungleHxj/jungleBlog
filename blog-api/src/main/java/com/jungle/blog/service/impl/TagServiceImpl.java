@@ -1,5 +1,6 @@
 package com.jungle.blog.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.jungle.blog.dao.mapper.TagMapper;
 import com.jungle.blog.dao.pojo.Tag;
 import com.jungle.blog.service.TagService;
@@ -63,5 +64,12 @@ public class TagServiceImpl implements TagService {
         List<Tag> tagList = tagMapper.findTagsByTagIds(tagIds);
 
         return Result.success(tagList);
+    }
+
+    @Override
+    public Result findAll() {
+        List<Tag> tagList = this.tagMapper.selectList(new LambdaQueryWrapper<>());
+
+        return Result.success(convertList(tagList));
     }
 }

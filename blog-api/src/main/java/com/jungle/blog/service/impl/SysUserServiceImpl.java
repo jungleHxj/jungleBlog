@@ -9,7 +9,10 @@ import com.jungle.blog.service.SysUserService;
 import com.jungle.blog.vo.ErrorCode;
 import com.jungle.blog.vo.LoginUserVo;
 import com.jungle.blog.vo.Result;
+import com.jungle.blog.vo.UserVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +35,22 @@ public class SysUserServiceImpl implements SysUserService {
     //public SysUserServiceImpl(SysUserMapper sysUserMapper){
     //    this.sysUserMapper = sysUserMapper;
     //}
+
+    @Override
+    public UserVo findUserVoById(Long id) {
+        SysUser sysUser = sysUserMapper.selectById(id);
+
+        if(Objects.isNull(sysUser)){
+            sysUser = new SysUser();
+            sysUser.setId(1L);
+            sysUser.setAvatar("static/tag/vue.png");
+            sysUser.setNickname("jungle");
+        }
+
+        UserVo userVo = new UserVo();
+        BeanUtils.copyProperties(sysUser,userVo);
+        return userVo;
+    }
 
     @Override
     public SysUser findUserById(Long id) {

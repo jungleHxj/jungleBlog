@@ -2,6 +2,7 @@ package com.jungle.blog.controller;
 
 import com.jungle.blog.service.ArticleService;
 import com.jungle.blog.vo.Result;
+import com.jungle.blog.vo.params.ArticleParam;
 import com.jungle.blog.vo.params.PageParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -60,4 +61,8 @@ public class ArticleController {
         return articleService.findArticleById(articleId);
     }
 
+    @PostMapping("publish")
+    public Result publish(@RequestBody ArticleParam articleParam){
+        return articleService.publish(articleParam);
+    }
 }

@@ -1,5 +1,7 @@
 package com.jungle.blog.dao.pojo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 @Data
@@ -10,6 +12,7 @@ public class Article {
     public static final int Article_TOP = 1;
     public static final int Article_Common = 0;
 
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     /**

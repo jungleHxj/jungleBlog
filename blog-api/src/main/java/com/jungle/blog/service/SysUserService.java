@@ -2,8 +2,11 @@ package com.jungle.blog.service;
 
 import com.jungle.blog.dao.pojo.SysUser;
 import com.jungle.blog.vo.Result;
+import com.jungle.blog.vo.UserVo;
 
 public interface SysUserService {
+
+    UserVo findUserVoById(Long id);
 
     SysUser findUserById(Long id);
 

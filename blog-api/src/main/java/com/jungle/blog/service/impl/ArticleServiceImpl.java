@@ -5,12 +5,18 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jungle.blog.dao.dos.Archives;
 import com.jungle.blog.dao.mapper.ArticleBodyMapper;
 import com.jungle.blog.dao.mapper.ArticleMapper;
+import com.jungle.blog.dao.mapper.ArticleTagMapper;
 import com.jungle.blog.dao.pojo.Article;
 import com.jungle.blog.dao.pojo.ArticleBody;
+import com.jungle.blog.dao.pojo.ArticleTag;
+import com.jungle.blog.dao.pojo.SysUser;
 import com.jungle.blog.service.*;
+import com.jungle.blog.util.UserThreadLocal;
 import com.jungle.blog.vo.ArticleBodyVo;
 import com.jungle.blog.vo.ArticleVo;
 import com.jungle.blog.vo.Result;
+import com.jungle.blog.vo.TagVo;
+import com.jungle.blog.vo.params.ArticleParam;
 import com.jungle.blog.vo.params.PageParams;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
@@ -18,7 +24,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
@@ -32,6 +40,9 @@ public class ArticleServiceImpl implements ArticleService {
     //public ArticleServiceImpl(ArticleMapper articleMapper){
     //    this.articleMapper = articleMapper;
     //}
+
+    @Autowired
+    private ArticleTagMapper articleTagMapper;
 
     @Autowired
     private TagService tagService;
@@ -112,6 +123,61 @@ public class ArticleServiceImpl implements ArticleService {
         threadService.updateArticleViewCount(articleMapper,article);
 
         return Result.success(articleVo);
+    }
+
+    @Override
+    public Result publish(ArticleParam articleParam) {
+        // 此接口要加入到登录拦截器中
+        SysUser sysUser = UserThreadLocal.get();
+
+        /**
+         * 1、发布文章  目的  构建Article对象
+         * 2、作者id   当前登录用户
+         * 3、标签  要将标签加入到  关联列表中
+         * 4、内容存储   article   bodyId
+         */
+
+        Article article = new Article();
+        article.setAuthorId(sysUser.getId());
+        article.setCategoryId(articleParam.getCategory().getId());
+        article.setCreateDate(System.currentTimeMillis());
+        article.setCommentCounts(0);
+        article.setViewCounts(0);
+        article.setSummary(articleParam.getSummary());
+        article.setTitle(articleParam.getTitle());
+        article.setWeight(Article.Article_Common);
+        article.setBodyId(-1L);
+
+        // 插入后会生成一个文章id
+        this.articleMapper.insert(article);
+
+        // tags
+        List<TagVo> tags = articleParam.getTags();
+        if(tags != null){
+            for(TagVo tag : tags){
+                Long articleId = article.getId();
+                ArticleTag articleTag = new ArticleTag();
+                articleTag.setArticleId(articleId);
+                articleTag.setTagId(tag.getId());
+                articleTagMapper.insert(articleTag);
+            }
+        }
+
+        // body
+        ArticleBody articleBody = new ArticleBody();
+        articleBody.setArticleId(article.getId());
+        articleBody.setContent(articleParam.getBody().getContent());
+        articleBody.setContentHtml(articleParam.getBody().getContentHtml());
+        articleBodyMapper.insert(articleBody);
+
+        // 更新bodyId
+        article.setBodyId(articleBody.getId());
+        articleMapper.updateById(article);
+
+        Map<String,String> map = new HashMap<>();
+        map.put("id",article.getId().toString());
+
+        return Result.success(map);
     }
 
     private List<ArticleVo> convertList(List<Article> records, boolean isTag, boolean isAuthor) {
