@@ -24,8 +24,6 @@ public class ArticleController {
     @PostMapping
     @LogAnnotation(module = "文章", operator = "获取文章列表")
     public Result listArticle(@RequestBody PageParams pageParams){
-
-
         return articleService.listArticle(pageParams);
     }
 
