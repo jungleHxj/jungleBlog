@@ -1,5 +1,6 @@
 package com.jungle.blog.controller;
 
+import com.jungle.blog.common.aop.LogAnnotation;
 import com.jungle.blog.service.ArticleService;
 import com.jungle.blog.vo.Result;
 import com.jungle.blog.vo.params.ArticleParam;
@@ -21,6 +22,7 @@ public class ArticleController {
      * @return
      */
     @PostMapping
+    @LogAnnotation(module = "文章", operator = "获取文章列表")
     public Result listArticle(@RequestBody PageParams pageParams){
 
 
