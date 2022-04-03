@@ -82,6 +82,7 @@ public class CommentsServiceImpl implements CommentsService {
 
     private CommentVo copy(Comment comment) {
         CommentVo commentVo = new CommentVo();
+        commentVo.setId(String.valueOf(comment.getId()));
         BeanUtils.copyProperties(comment,commentVo);
 
         // 作者信息

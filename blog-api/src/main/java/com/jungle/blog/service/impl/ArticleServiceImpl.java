@@ -173,7 +173,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         Article article = new Article();
         article.setAuthorId(sysUser.getId());
-        article.setCategoryId(articleParam.getCategory().getId());
+        article.setCategoryId(Long.parseLong(articleParam.getCategory().getId()));
         article.setCreateDate(System.currentTimeMillis());
         article.setCommentCounts(0);
         article.setViewCounts(0);
@@ -192,7 +192,7 @@ public class ArticleServiceImpl implements ArticleService {
                 Long articleId = article.getId();
                 ArticleTag articleTag = new ArticleTag();
                 articleTag.setArticleId(articleId);
-                articleTag.setTagId(tag.getId());
+                articleTag.setTagId(Long.parseLong(tag.getId()));
                 articleTagMapper.insert(articleTag);
             }
         }
@@ -237,6 +237,8 @@ public class ArticleServiceImpl implements ArticleService {
 
     private ArticleVo copy(Article article, boolean isTag, boolean isAuthor, boolean isBody, boolean isCategory) {
         ArticleVo articleVo = new ArticleVo();
+        articleVo.setId(String.valueOf(article.getId()));
+
         BeanUtils.copyProperties(article, articleVo);
 
         articleVo.setCreateDate(new DateTime(article.getCreateDate()).toString("yyyy-MM-dd HH:mm"));

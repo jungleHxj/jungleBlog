@@ -23,6 +23,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryVo findCategoryById(Long categoryId) {
         Category category = categoryMapper.selectById(categoryId);
         CategoryVo categoryVo = new CategoryVo();
+        categoryVo.setId(String.valueOf(category.getId()));
         BeanUtils.copyProperties(category, categoryVo);
 
         return categoryVo;
